@@ -16,16 +16,33 @@
       crossorigin="anonymous"
       defer
     ></script>
-    <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <div class="container">
-      <div class="row" id="xo-picker">
-        <div class="col-3" id="x"></div>
-        <div class="col-3" id="o"></div>
+      <div class="row justify-content-center">
+        <h1 class="col-3 mb-4 mt-2">Tic-Tac-Toe</h1>
       </div>
-      <div class="row col-3" id="game-board"></div>
+      <div class="row justify-content-center" id="marker">
+        <h3 class="col-3 mb-3 mt-3">Choose your marker</h3>
+      </div>
+      <div class="row justify-content-center" id="marker-btns">
+        <button class="btn-primary col-4" id="btn-x">X</button>
+        <button class="btn-primary col-4" id="btn-o">O</button>
+      </div>
+
+      <div class="row col-6 invisible" id="game-board">
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+        <div class="col-4 btn-secondary"></div>
+      </div>
       <div class="row" id="restart-btn"></div>
     </div>
   </body>
