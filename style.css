@@ -1,0 +1,7 @@
+#game-board {
+  font-size: 2rem;
+  min-height: 25vw;
+}
+.cell {
+  min-height: 4vw;
+}
