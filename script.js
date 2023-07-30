@@ -20,25 +20,22 @@ const chooseMarker = ((marker) => {
   });
 })();
 
-const startGame = (marker) => {
+const startGame = () => {
   board.classList.remove("invisible");
   const markerContainer = document.querySelector("#marker-container");
   markerContainer.classList.add("invisible");
+  addMarker();
 };
 
-// const addMarker = () => {
-//   for (let i = 0; i < 9; i++) {
-//     if (Math.random() > 0.5) {
-//       gameBoard.board.push("x");
-//     } else {
-//       gameBoard.board.push("o");
-//     }
-
-//     let cell = document.createElement("div");
-//     cell.classList.add("col-4", "cell");
-//     cell.setAttribute("id", i);
-//     board.appendChild(cell);
-//     cell.textContent = gameBoard.board[i];
-//     console.log(gameBoard.board);
-//   }
-// };
+const addMarker = () => {
+  const cell = document.querySelectorAll(".cell");
+  for (let i = 0; i < 9; i++) {
+    cell[i].addEventListener("click", () => {
+      if (cell[i].textContent === "") {
+        cell[i].textContent = players.player1;
+        gameBoard.board[i] = players.player1;
+        computerPlay();
+      }
+    });
+  }
+};
