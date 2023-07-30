@@ -1,5 +1,3 @@
-const btnX = document.querySelector("#btn-x");
-const btnO = document.querySelector("#btn-o");
 const board = document.querySelector("#game-board");
 
 let gameBoard = {
@@ -7,19 +5,25 @@ let gameBoard = {
 };
 let players = {};
 
-btnX.addEventListener("click", () => {
-  players.player1 = "x";
-  players.player2 = "o";
-  startGame("x");
-});
-btnO.addEventListener("click", () => {
-  players.player1 = "o";
-  players.player2 = "x";
-  startGame("o");
-});
+const chooseMarker = ((marker) => {
+  const btnX = document.querySelector("#btn-x");
+  const btnO = document.querySelector("#btn-o");
+  btnX.addEventListener("click", () => {
+    players.player1 = "x";
+    players.player2 = "o";
+    startGame("x");
+  });
+  btnO.addEventListener("click", () => {
+    players.player1 = "o";
+    players.player2 = "x";
+    startGame("o");
+  });
+})();
 
 const startGame = (marker) => {
   board.classList.remove("invisible");
+  const markerContainer = document.querySelector("#marker-container");
+  markerContainer.classList.add("invisible");
 };
 
 // const addMarker = () => {
