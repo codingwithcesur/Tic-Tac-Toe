@@ -34,8 +34,21 @@ const addMarker = () => {
       if (cell[i].textContent === "") {
         cell[i].textContent = players.player1;
         gameBoard.board[i] = players.player1;
+        checkWinner();
         computerPlay();
       }
     });
   }
+};
+
+const computerPlay = () => {
+  const cell = document.querySelectorAll(".cell");
+  let randomCell = Math.floor(Math.random() * 9);
+  if (cell[randomCell].textContent === "") {
+    cell[randomCell].textContent = players.player2;
+    gameBoard.board[randomCell] = players.player2;
+  } else {
+    computerPlay();
+  }
+  checkWinner();
 };
