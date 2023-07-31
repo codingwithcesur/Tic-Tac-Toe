@@ -44,11 +44,60 @@ const addMarker = () => {
 const computerPlay = () => {
   const cell = document.querySelectorAll(".cell");
   let randomCell = Math.floor(Math.random() * 9);
-  if (cell[randomCell].textContent === "") {
-    cell[randomCell].textContent = players.player2;
-    gameBoard.board[randomCell] = players.player2;
-  } else {
-    computerPlay();
+  if (gameBoard.board.length !== 9) {
+    if (cell[randomCell].textContent === "") {
+      cell[randomCell].textContent = players.player2;
+      gameBoard.board[randomCell] = players.player2;
+    } else {
+      computerPlay();
+    }
+    checkWinner();
   }
-  checkWinner();
+};
+
+const checkWinner = () => {
+  const winnerText = document.querySelector("#winner-text");
+  console.log(gameBoard.board.toString());
+  for (let i = 0; i < gameBoard.board.length; i++) {
+    if (i === 0 || i === 3 || i === 6) {
+      if (gameBoard.board[i] !== undefined) {
+        if (
+          gameBoard.board[i] === gameBoard.board[i + 1] &&
+          gameBoard.board[i] === gameBoard.board[i + 2]
+        ) {
+          console.log("yes");
+        }
+      }
+    }
+    if (i === 0 || i === 1 || i === 2) {
+      if (gameBoard.board[i] !== undefined) {
+        if (
+          gameBoard.board[i] === gameBoard.board[i + 3] &&
+          gameBoard.board[i] === gameBoard.board[i + 6]
+        ) {
+          console.log("yes");
+        }
+      }
+    }
+    if (i === 0) {
+      if (gameBoard.board[i] !== undefined) {
+        if (
+          gameBoard.board[i] === gameBoard.board[i + 4] &&
+          gameBoard.board[i] === gameBoard.board[i + 8]
+        ) {
+          console.log("yes");
+        }
+      }
+    }
+    if (i === 2) {
+      if (gameBoard.board[i] !== undefined) {
+        if (
+          gameBoard.board[i] === gameBoard.board[i + 2] &&
+          gameBoard.board[i] === gameBoard.board[i + 4]
+        ) {
+          console.log("yes");
+        }
+      }
+    }
+  }
 };
