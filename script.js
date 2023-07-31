@@ -8,25 +8,27 @@
 
 const gameInfo = (() => {
   const board = document.querySelector("#game-board");
+  const cell = document.querySelectorAll(".cell");
+  const winnerText = document.querySelector("#winner-text");
   let gameBoard = {
     board: [],
+    players: {},
   };
-  let players = {};
 
-  return { gameBoard, players, board };
+  return { gameBoard, board, cell, winnerText };
 })();
 const chooseMarker = ((marker) => {
   const btnX = document.querySelector("#btn-x");
   const btnO = document.querySelector("#btn-o");
   btnX.addEventListener("click", () => {
-    gameInfo.players.player1 = "x";
-    gameInfo.players.player2 = "o";
-    startGame("x");
+    gameInfo.gameBoard.players.player1 = "x";
+    gameInfo.gameBoard.players.player2 = "o";
+    startGame();
   });
   btnO.addEventListener("click", () => {
-    gameInfo.players.player1 = "o";
-    gameInfo.players.player2 = "x";
-    startGame("o");
+    gameInfo.gameBoard.players.player1 = "o";
+    gameInfo.gameBoard.players.player2 = "x";
+    startGame();
   });
 })();
 
@@ -38,43 +40,44 @@ const startGame = () => {
 };
 
 const addMarker = () => {
-  const cell = document.querySelectorAll(".cell");
   for (let i = 0; i < 9; i++) {
-    cell[i].addEventListener("click", () => {
-      if (cell[i].textContent === "") {
-        cell[i].textContent = gameInfo.players.player1;
-        gameInfo.gameBoard.board[i] = gameInfo.players.player1;
-        checkWinner();
-        computerPlay();
+    gameInfo.cell[i].addEventListener("click", () => {
+      if (checkGameOn()) {
+        if (!checkTie()) {
+          if (gameInfo.cell[i].textContent === "") {
+            gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player1;
+            gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player1;
+            checkWinner();
+            computerPlay();
+          }
+        } else {
+          gameIsTie();
+        }
       }
     });
   }
 };
 
 const computerPlay = () => {
-  const cell = document.querySelectorAll(".cell");
-  let randomCell = Math.floor(Math.random() * 9);
-  if (
-    gameInfo.gameBoard.board.toString().includes(",") ||
-    gameInfo.gameBoard.board.length < 9
-  ) {
-    if (cell[randomCell].textContent === "") {
-      cell[randomCell].textContent = gameInfo.players.player2;
-      gameInfo.gameBoard.board[randomCell] = gameInfo.players.player2;
+  if (checkGameOn()) {
+    if (!checkTie()) {
+      let randomCell = Math.floor(Math.random() * 9);
+      if (gameInfo.cell[randomCell].textContent === "") {
+        gameInfo.cell[randomCell].textContent =
+          gameInfo.gameBoard.players.player2;
+        gameInfo.gameBoard.board[randomCell] =
+          gameInfo.gameBoard.players.player2;
+      } else {
+        computerPlay();
+      }
+      checkWinner();
     } else {
-      computerPlay();
+      gameIsTie();
     }
-    checkWinner();
-  } else {
-    const winnerText = document.querySelector("#winner-text");
-    winnerText.textContent = "It's a tie!";
-    gameInfo.board.classList.add("invisible");
-    winnerText.classList.remove("invisible");
   }
 };
 
 const checkWinner = () => {
-  const winnerText = document.querySelector("#winner-text");
   for (let i = 0; i < gameInfo.gameBoard.board.length; i++) {
     if (i === 0 || i === 3 || i === 6) {
       if (gameInfo.gameBoard.board[i] !== undefined) {
@@ -82,9 +85,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 1] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2]
         ) {
-          winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
-          winnerText.classList.remove("invisible");
+          gameInfo.winnerText.classList.remove("invisible");
         }
       }
     }
@@ -94,9 +97,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 3] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 6]
         ) {
-          winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
-          winnerText.classList.remove("invisible");
+          gameInfo.winnerText.classList.remove("invisible");
         }
       }
     }
@@ -106,9 +109,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 8]
         ) {
-          winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
-          winnerText.classList.remove("invisible");
+          gameInfo.winnerText.classList.remove("invisible");
         }
       }
     }
@@ -118,11 +121,34 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4]
         ) {
-          winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
-          winnerText.classList.remove("invisible");
+          gameInfo.winnerText.classList.remove("invisible");
         }
       }
     }
   }
+};
+
+const checkTie = () => {
+  for (let i = 0; i < 9; i++) {
+    if (gameInfo.cell[i].textContent === "") {
+      return false;
+    } else if (i === 8) {
+      return true;
+    }
+  }
+};
+
+const checkGameOn = () => {
+  if (gameInfo.winnerText.textContent === "") {
+    return true;
+  }
+  return false;
+};
+
+const gameIsTie = () => {
+  gameInfo.winnerText.textContent = "It's a tie!";
+  gameInfo.board.classList.add("invisible");
+  gameInfo.winnerText.classList.remove("invisible");
 };
