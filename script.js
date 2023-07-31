@@ -1,7 +1,8 @@
 // add break time for computer
 // add reset button
 // fix last move tie bug
-
+// Make an ai that can't be beaten
+// Add difficulty levels
 const board = document.querySelector("#game-board");
 
 let gameBoard = {
@@ -48,7 +49,7 @@ const addMarker = () => {
 const computerPlay = () => {
   const cell = document.querySelectorAll(".cell");
   let randomCell = Math.floor(Math.random() * 9);
-  if (gameBoard.board.toString().includes(",") || gameBoard.board.length < 8) {
+  if (gameBoard.board.toString().includes(",") || gameBoard.board.length < 9) {
     if (cell[randomCell].textContent === "") {
       cell[randomCell].textContent = players.player2;
       gameBoard.board[randomCell] = players.player2;
