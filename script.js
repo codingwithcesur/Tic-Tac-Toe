@@ -44,7 +44,7 @@ const addMarker = () => {
 const computerPlay = () => {
   const cell = document.querySelectorAll(".cell");
   let randomCell = Math.floor(Math.random() * 9);
-  if (gameBoard.board.length !== 9) {
+  if (gameBoard.board.toString().includes(",,") || gameBoard.board.length < 9) {
     if (cell[randomCell].textContent === "") {
       cell[randomCell].textContent = players.player2;
       gameBoard.board[randomCell] = players.player2;
@@ -52,12 +52,16 @@ const computerPlay = () => {
       computerPlay();
     }
     checkWinner();
+  } else {
+    const winnerText = document.querySelector("#winner-text");
+    winnerText.textContent = "It's a tie!";
+    board.classList.add("invisible");
+    winnerText.classList.remove("invisible");
   }
 };
 
 const checkWinner = () => {
   const winnerText = document.querySelector("#winner-text");
-  console.log(gameBoard.board.toString());
   for (let i = 0; i < gameBoard.board.length; i++) {
     if (i === 0 || i === 3 || i === 6) {
       if (gameBoard.board[i] !== undefined) {
@@ -65,7 +69,9 @@ const checkWinner = () => {
           gameBoard.board[i] === gameBoard.board[i + 1] &&
           gameBoard.board[i] === gameBoard.board[i + 2]
         ) {
-          console.log("yes");
+          winnerText.textContent = `${gameBoard.board[i]} is the winner!`;
+          board.classList.add("invisible");
+          winnerText.classList.remove("invisible");
         }
       }
     }
@@ -75,7 +81,9 @@ const checkWinner = () => {
           gameBoard.board[i] === gameBoard.board[i + 3] &&
           gameBoard.board[i] === gameBoard.board[i + 6]
         ) {
-          console.log("yes");
+          winnerText.textContent = `${gameBoard.board[i]} is the winner!`;
+          board.classList.add("invisible");
+          winnerText.classList.remove("invisible");
         }
       }
     }
@@ -85,7 +93,9 @@ const checkWinner = () => {
           gameBoard.board[i] === gameBoard.board[i + 4] &&
           gameBoard.board[i] === gameBoard.board[i + 8]
         ) {
-          console.log("yes");
+          winnerText.textContent = `${gameBoard.board[i]} is the winner!`;
+          board.classList.add("invisible");
+          winnerText.classList.remove("invisible");
         }
       }
     }
@@ -95,7 +105,9 @@ const checkWinner = () => {
           gameBoard.board[i] === gameBoard.board[i + 2] &&
           gameBoard.board[i] === gameBoard.board[i + 4]
         ) {
-          console.log("yes");
+          winnerText.textContent = `${gameBoard.board[i]} is the winner!`;
+          board.classList.add("invisible");
+          winnerText.classList.remove("invisible");
         }
       }
     }
