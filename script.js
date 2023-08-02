@@ -10,25 +10,30 @@ const gameInfo = (() => {
   const board = document.querySelector("#game-board");
   const cell = document.querySelectorAll(".cell");
   const winnerText = document.querySelector("#winner-text");
+  const btnX = document.querySelector("#btn-x");
+  const btnO = document.querySelector("#btn-o");
+  const resetBtn = document.querySelector("#reset-btn");
   let gameBoard = {
     board: [],
     players: {},
   };
 
-  return { gameBoard, board, cell, winnerText };
+  return { gameBoard, board, cell, winnerText, btnX, btnO, resetBtn };
 })();
-const chooseMarker = ((marker) => {
-  const btnX = document.querySelector("#btn-x");
-  const btnO = document.querySelector("#btn-o");
-  btnX.addEventListener("click", () => {
+
+const btnEvents = (() => {
+  gameInfo.btnX.addEventListener("click", () => {
     gameInfo.gameBoard.players.player1 = "x";
     gameInfo.gameBoard.players.player2 = "o";
     startGame();
   });
-  btnO.addEventListener("click", () => {
+  gameInfo.btnO.addEventListener("click", () => {
     gameInfo.gameBoard.players.player1 = "o";
     gameInfo.gameBoard.players.player2 = "x";
     startGame();
+  });
+  gameInfo.resetBtn.addEventListener("click", () => {
+    resetGame();
   });
 })();
 
@@ -36,6 +41,7 @@ const startGame = () => {
   gameInfo.board.classList.remove("invisible");
   const markerContainer = document.querySelector("#marker-container");
   markerContainer.classList.add("invisible");
+  gameInfo.resetBtn.classList.remove("invisible");
   addMarker();
 };
 
@@ -151,4 +157,17 @@ const gameIsTie = () => {
   gameInfo.winnerText.textContent = "It's a tie!";
   gameInfo.board.classList.add("invisible");
   gameInfo.winnerText.classList.remove("invisible");
+};
+
+const resetGame = () => {
+  const markerContainer = document.querySelector("#marker-container");
+  gameInfo.winnerText.textContent = "";
+  gameInfo.winnerText.classList.add("invisible");
+  markerContainer.classList.remove("invisible");
+  gameInfo.board.classList.add("invisible");
+  for (let i = 0; i < 9; i++) {
+    gameInfo.cell[i].textContent = "";
+    gameInfo.gameBoard.board[i] = undefined;
+  }
+  gameInfo.resetBtn.classList.add("invisible");
 };
