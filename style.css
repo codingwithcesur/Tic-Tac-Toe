@@ -1,7 +1,10 @@
-#game-board {
-  font-size: 2rem;
-  min-height: 25vw;
-}
 .cell {
-  min-height: 4vw;
+  min-height: 7vh;
+  font-size: 2rem;
+}
+#reset-btn-container {
+  min-height: 4vh;
+}
+.col-lg-4 {
+  min-height: 7vw;
 }

@@ -13,12 +13,22 @@ const gameInfo = (() => {
   const btnX = document.querySelector("#btn-x");
   const btnO = document.querySelector("#btn-o");
   const resetBtn = document.querySelector("#reset-btn");
+  const winnerTextContent = document.querySelector("#winner-text-content");
   let gameBoard = {
     board: [],
     players: {},
   };
 
-  return { gameBoard, board, cell, winnerText, btnX, btnO, resetBtn };
+  return {
+    gameBoard,
+    board,
+    cell,
+    winnerText,
+    btnX,
+    btnO,
+    resetBtn,
+    winnerTextContent,
+  };
 })();
 
 const btnEvents = (() => {
@@ -91,8 +101,13 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 1] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2]
         ) {
-          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
+          if (gameInfo.gameBoard.board[i] === "x") {
+            gameInfo.winnerText.classList.add("alert-info");
+          } else {
+            gameInfo.winnerText.classList.add("alert-danger");
+          }
           gameInfo.winnerText.classList.remove("invisible");
         }
       }
@@ -103,8 +118,13 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 3] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 6]
         ) {
-          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
+          if (gameInfo.gameBoard.board[i] === "x") {
+            gameInfo.winnerText.classList.add("alert-info");
+          } else {
+            gameInfo.winnerText.classList.add("alert-danger");
+          }
           gameInfo.winnerText.classList.remove("invisible");
         }
       }
@@ -115,8 +135,13 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 8]
         ) {
-          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
+          if (gameInfo.gameBoard.board[i] === "x") {
+            gameInfo.winnerText.classList.add("alert-info");
+          } else {
+            gameInfo.winnerText.classList.add("alert-danger");
+          }
           gameInfo.winnerText.classList.remove("invisible");
         }
       }
@@ -127,8 +152,13 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4]
         ) {
-          gameInfo.winnerText.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
+          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
           gameInfo.board.classList.add("invisible");
+          if (gameInfo.gameBoard.board[i] === "x") {
+            gameInfo.winnerText.classList.add("alert-info");
+          } else {
+            gameInfo.winnerText.classList.add("alert-danger");
+          }
           gameInfo.winnerText.classList.remove("invisible");
         }
       }
@@ -147,21 +177,22 @@ const checkTie = () => {
 };
 
 const checkGameOn = () => {
-  if (gameInfo.winnerText.textContent === "") {
+  if (gameInfo.winnerTextContent.textContent === "") {
     return true;
   }
   return false;
 };
 
 const gameIsTie = () => {
-  gameInfo.winnerText.textContent = "It's a tie!";
+  gameInfo.winnerTextContent.textContent = "It's a tie!";
+  gameInfo.winnerText.classList.add("alert-dark");
   gameInfo.board.classList.add("invisible");
   gameInfo.winnerText.classList.remove("invisible");
 };
 
 const resetGame = () => {
   const markerContainer = document.querySelector("#marker-container");
-  gameInfo.winnerText.textContent = "";
+  gameInfo.winnerTextContent.textContent = "";
   gameInfo.winnerText.classList.add("invisible");
   markerContainer.classList.remove("invisible");
   gameInfo.board.classList.add("invisible");
@@ -170,4 +201,7 @@ const resetGame = () => {
     gameInfo.gameBoard.board[i] = undefined;
   }
   gameInfo.resetBtn.classList.add("invisible");
+  gameInfo.winnerText.classList.remove("alert-info");
+  gameInfo.winnerText.classList.remove("alert-danger");
+  gameInfo.winnerText.classList.remove("alert-dark");
 };

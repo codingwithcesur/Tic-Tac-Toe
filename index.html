@@ -20,54 +20,97 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="row justify-content-center">
-        <h1 class="col-3 mb-4 mt-2">Tic-Tac-Toe</h1>
+    <div class="container bg-secondary-subtle vh-100 vw-100">
+      <div class="row">
+        <h1 class="col mt-3 text-center">Tic-Tac-Toe</h1>
+      </div>
+      <div class="alert invisible" id="winner-text" role="alert">
+        <p class="text-center h4" id="winner-text-content"></p>
       </div>
       <div id="marker-container">
         <div class="row justify-content-center" id="marker-text">
-          <h3 class="col-3 mb-3 mt-3">Choose your marker</h3>
+          <h3 class="col mb-3 text-center">Choose your marker</h3>
         </div>
         <div class="row justify-content-center" id="marker-btns">
-          <button class="btn-primary col-4" id="btn-x">X</button>
-          <button class="btn-primary col-4" id="btn-o">O</button>
+          <button
+            class="btn btn-primary col-md-1 col-2 rounded-circle text-white h4"
+            id="btn-x"
+          >
+            X
+          </button>
+          <button
+            class="btn btn-primary col-md-1 col-2 rounded-circle text-white ms-4 h4"
+            id="btn-o"
+          >
+            O
+          </button>
         </div>
       </div>
-      <div class="row invisible" id="winner-text"></div>
+
       <div
-        class="row invisible border border-secondary mt-4 p-3 bg-secondary-subtle"
+        class="row row-cols-3 invisible mt-md-1 p-3 bg-primary-subtle me-3 ms-3 me-md-5 ms-md-5 rounded-3"
         id="game-board"
       >
         <div
-          class="cell col-4 border-end border-bottom border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
+          class="col-4 col-lg-4 border-end border-bottom border-secondary border-3 d-flex"
+        >
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
         <div
-          class="cell col-4 border-end border-bottom border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
+          class="col-4 col-lg-4 border-end border-bottom border-secondary border-3 d-flex"
+        >
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
         <div
-          class="cell col-4 border-bottom border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
+          class="col-4 col-lg-4 border-bottom border-secondary border-3 d-flex"
+        >
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
         <div
-          class="cell col-4 border-end border-bottom border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
+          class="col-4 col-lg-4 border-end border-bottom border-secondary border-3 d-flex"
+        >
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
         <div
-          class="cell col-4 border-end border-bottom border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
+          class="col-4 col-lg-4 border-end border-bottom border-secondary border-3 d-flex"
+        >
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
         <div
-          class="cell col-4 border-bottom border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
-        <div
-          class="cell col-4 border-end border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
-        <div
-          class="cell col-4 border-end border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
-        <div
-          class="cell col-4 border-secondary border-2 d-flex justify-content-center align-items-center"
-        ></div>
+          class="col-4 col-lg-4 border-bottom border-secondary border-3 d-flex"
+        >
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
+        <div class="col-4 col-lg-4 border-end border-secondary border-3 d-flex">
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
+        <div class="col-4 col-lg-4 border-end border-secondary border-3 d-flex">
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
+        <div class="col-4 col-lg-4 border-secondary border-3 d-flex">
+          <p
+            class="h4 cell col row justify-content-center align-items-center"
+          ></p>
+        </div>
       </div>
-      <div class="row" id="reset-btn-container">
-        <button class="btn-primary col-4 invisible" id="reset-btn">
+      <div class="row justify-content-center mt-2" id="reset-btn-container">
+        <button class="btn btn-danger col-4 rounded-3 invisible" id="reset-btn">
           Reset
         </button>
       </div>
