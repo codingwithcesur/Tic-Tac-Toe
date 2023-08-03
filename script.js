@@ -1,6 +1,5 @@
 // To do:
 // Make an ai that can't be beaten
-// Add difficulty levels
 // Add 2 player mode
 // Add score keeping
 
@@ -12,9 +11,15 @@ const gameInfo = (() => {
   const btnO = document.querySelector("#btn-o");
   const resetBtn = document.querySelector("#reset-btn");
   const winnerTextContent = document.querySelector("#winner-text-content");
+  const markerContainer = document.querySelector("#marker-container");
+  const difficultyContainer = document.querySelector("#difficulty-container");
+  const easyBtn = document.querySelector("#btn-easy");
+  const mediumBtn = document.querySelector("#btn-medium");
   let gameBoard = {
     board: [],
     players: {},
+    currentDifficulty: "",
+    moveMade: false,
   };
 
   return {
@@ -26,7 +31,24 @@ const gameInfo = (() => {
     btnO,
     resetBtn,
     winnerTextContent,
+    markerContainer,
+    difficultyContainer,
+    easyBtn,
+    mediumBtn,
   };
+})();
+
+const difficultyPicker = (() => {
+  gameInfo.easyBtn.addEventListener("click", () => {
+    gameInfo.gameBoard.currentDifficulty = "easy";
+    gameInfo.markerContainer.classList.remove("invisible");
+    gameInfo.difficultyContainer.classList.add("invisible");
+  });
+  gameInfo.mediumBtn.addEventListener("click", () => {
+    gameInfo.gameBoard.currentDifficulty = "medium";
+    gameInfo.markerContainer.classList.remove("invisible");
+    gameInfo.difficultyContainer.classList.add("invisible");
+  });
 })();
 
 const btnEvents = (() => {
@@ -47,8 +69,7 @@ const btnEvents = (() => {
 
 const startGame = () => {
   gameInfo.board.classList.remove("invisible");
-  const markerContainer = document.querySelector("#marker-container");
-  markerContainer.classList.add("invisible");
+  gameInfo.markerContainer.classList.add("invisible");
   gameInfo.resetBtn.classList.remove("invisible");
   addMarker();
 };
@@ -77,9 +98,9 @@ const addMarker = () => {
 
 const computerPlay = () => {
   if (checkGameOn() && !checkTie()) {
-    if (currentDifficulty === "easy") {
+    if (gameInfo.gameBoard.currentDifficulty === "easy") {
       computerEasy();
-    } else if (currentDifficulty === "medium") {
+    } else if (gameInfo.gameBoard.currentDifficulty === "medium") {
       computerMedium();
     }
   } else if (checkTie()) {
@@ -105,41 +126,72 @@ const computerEasy = () => {
 };
 
 const computerMedium = () => {
-  let randomCell = Math.floor(Math.random() * 9);
-  const fadeOut = () => {
-    gameInfo.cell[randomCell].classList.remove("fade-in-anim");
-  };
-  if (
-    (gameInfo.cell[randomCell] === "" &&
-      gameInfo.gameBoard.board[randomCell - 1] ===
-        gameInfo.gameBoard.players.player2 &&
-      gameInfo.gameBoard.board[randomCell - 2] ===
-        gameInfo.gameBoard.players.player2) ||
-    (gameInfo.gameBoard.board[randomCell] === "" &&
-      gameInfo.gameBoard.board[randomCell + 1] ===
-        gameInfo.gameBoard.players.player2 &&
-      gameInfo.gameBoard.board[randomCell + 2] ===
-        gameInfo.gameBoard.players.player2)
-  ) {
-    gameInfo.cell[randomCell].textContent = gameInfo.gameBoard.players.player2;
-    gameInfo.cell[randomCell].classList.add("fade-in-anim");
-    setTimeout(fadeOut, 500);
-    gameInfo.gameBoard.board[randomCell] = gameInfo.gameBoard.players.player2;
-  } else if (
-    (gameInfo.cell[randomCell] === "" &&
-      gameInfo.gameBoard.board[randomCell - 1] ===
-        gameInfo.gameBoard.players.player2) ||
-    gameInfo.gameBoard.board[randomCell + 1] ===
-      gameInfo.gameBoard.players.player2
-  ) {
-  } else if (gameInfo.cell[randomCell].textContent === "") {
-    gameInfo.cell[randomCell].textContent = gameInfo.gameBoard.players.player2;
-    gameInfo.cell[randomCell].classList.add("fade-in-anim");
-    setTimeout(fadeOut, 500);
-    gameInfo.gameBoard.board[randomCell] = gameInfo.gameBoard.players.player2;
-  } else {
-    computerPlay();
+  for (let i = 0; i < 7; i++) {
+    if (
+      (gameInfo.cell[i].textContent === "" &&
+        gameInfo.gameBoard.board[i - 1] ===
+          gameInfo.gameBoard.players.player2 &&
+        gameInfo.gameBoard.board[i - 2] ===
+          gameInfo.gameBoard.players.player2) ||
+      (gameInfo.cell[i].textContent === "" &&
+        gameInfo.gameBoard.board[i + 1] ===
+          gameInfo.gameBoard.players.player2 &&
+        gameInfo.gameBoard.board[i + 2] === gameInfo.gameBoard.players.player2)
+    ) {
+      gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+      gameInfo.cell[i].classList.add("fade-in-anim");
+      const fadeOut = () => {
+        gameInfo.cell[i].classList.remove("fade-in-anim");
+      };
+      setTimeout(fadeOut, 500);
+      gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+      gameInfo.gameBoard.moveMade = true;
+      break;
+    }
   }
+  if (!gameInfo.gameBoard.moveMade) {
+    for (let i = 0; i < 8; i++) {
+      if (
+        (gameInfo.cell[i].textContent === "" &&
+          gameInfo.gameBoard.board[i - 1] ===
+            gameInfo.gameBoard.players.player2) ||
+        (gameInfo.cell[i].textContent === "" &&
+          gameInfo.gameBoard.board[i + 1] ===
+            gameInfo.gameBoard.players.player2)
+      ) {
+        gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+        gameInfo.cell[i].classList.add("fade-in-anim");
+        const fadeOut = () => {
+          gameInfo.cell[i].classList.remove("fade-in-anim");
+        };
+        setTimeout(fadeOut, 500);
+        gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+        gameInfo.gameBoard.moveMade = true;
+        break;
+      }
+    }
+  }
+  if (!gameInfo.gameBoard.moveMade) {
+    let randomCell = Math.floor(Math.random() * 9);
+    const fadeOut = () => {
+      gameInfo.cell[randomCell].classList.remove("fade-in-anim");
+    };
+    while (gameInfo.gameBoard.moveMade === false) {
+      if (gameInfo.cell[randomCell].textContent === "") {
+        gameInfo.cell[randomCell].textContent =
+          gameInfo.gameBoard.players.player2;
+        gameInfo.cell[randomCell].classList.add("fade-in-anim");
+        setTimeout(fadeOut, 500);
+        gameInfo.gameBoard.board[randomCell] =
+          gameInfo.gameBoard.players.player2;
+        gameInfo.gameBoard.moveMade = true;
+        break;
+      } else {
+        randomCell = Math.floor(Math.random() * 9);
+      }
+    }
+  }
+  gameInfo.gameBoard.moveMade = false;
   checkWinner();
 };
 
@@ -271,11 +323,10 @@ const gameIsTie = () => {
 };
 
 const resetGame = () => {
-  const markerContainer = document.querySelector("#marker-container");
   gameInfo.winnerTextContent.textContent = "";
   gameInfo.winnerText.classList.add("invisible");
-  markerContainer.classList.remove("invisible");
   gameInfo.board.classList.add("invisible");
+  gameInfo.difficultyContainer.classList.remove("invisible");
   for (let i = 0; i < 9; i++) {
     gameInfo.cell[i].textContent = "";
     gameInfo.cell[i].classList.remove("text-info");
