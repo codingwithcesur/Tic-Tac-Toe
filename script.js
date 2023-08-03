@@ -1,10 +1,9 @@
 // To do:
 // add break time for computer
-// add reset button
 // Make an ai that can't be beaten
 // Add difficulty levels
-// Add better UI
-// Add multiplayer
+// Add 2 player mode
+// Add score keeping
 
 const gameInfo = (() => {
   const board = document.querySelector("#game-board");
@@ -58,10 +57,15 @@ const startGame = () => {
 const addMarker = () => {
   for (let i = 0; i < 9; i++) {
     gameInfo.cell[i].addEventListener("click", () => {
+      const fadeOut = () => {
+        gameInfo.cell[i].classList.remove("fade-in-anim");
+      };
       if (checkGameOn()) {
         if (!checkTie()) {
           if (gameInfo.cell[i].textContent === "") {
             gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player1;
+            gameInfo.cell[i].classList.add("fade-in-anim");
+            setTimeout(fadeOut, 500);
             gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player1;
             checkWinner();
             computerPlay();
@@ -78,9 +82,14 @@ const computerPlay = () => {
   if (checkGameOn()) {
     if (!checkTie()) {
       let randomCell = Math.floor(Math.random() * 9);
+      const fadeOut = () => {
+        gameInfo.cell[randomCell].classList.remove("fade-in-anim");
+      };
       if (gameInfo.cell[randomCell].textContent === "") {
         gameInfo.cell[randomCell].textContent =
           gameInfo.gameBoard.players.player2;
+        gameInfo.cell[randomCell].classList.add("fade-in-anim");
+        setTimeout(fadeOut, 500);
         gameInfo.gameBoard.board[randomCell] =
           gameInfo.gameBoard.players.player2;
       } else {
@@ -102,11 +111,16 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          gameInfo.board.classList.add("invisible");
           if (gameInfo.gameBoard.board[i] === "x") {
             gameInfo.winnerText.classList.add("alert-info");
+            gameInfo.cell[i].classList.add("text-info");
+            gameInfo.cell[i + 1].classList.add("text-info");
+            gameInfo.cell[i + 2].classList.add("text-info");
           } else {
             gameInfo.winnerText.classList.add("alert-danger");
+            gameInfo.cell[i].classList.add("text-danger");
+            gameInfo.cell[i + 1].classList.add("text-danger");
+            gameInfo.cell[i + 2].classList.add("text-danger");
           }
           gameInfo.winnerText.classList.remove("invisible");
         }
@@ -119,11 +133,16 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 6]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          gameInfo.board.classList.add("invisible");
           if (gameInfo.gameBoard.board[i] === "x") {
             gameInfo.winnerText.classList.add("alert-info");
+            gameInfo.cell[i].classList.add("text-info");
+            gameInfo.cell[i + 3].classList.add("text-info");
+            gameInfo.cell[i + 6].classList.add("text-info");
           } else {
             gameInfo.winnerText.classList.add("alert-danger");
+            gameInfo.cell[i].classList.add("text-danger");
+            gameInfo.cell[i + 3].classList.add("text-danger");
+            gameInfo.cell[i + 6].classList.add("text-danger");
           }
           gameInfo.winnerText.classList.remove("invisible");
         }
@@ -136,11 +155,16 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 8]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          gameInfo.board.classList.add("invisible");
           if (gameInfo.gameBoard.board[i] === "x") {
             gameInfo.winnerText.classList.add("alert-info");
+            gameInfo.cell[i].classList.add("text-info");
+            gameInfo.cell[i + 4].classList.add("text-info");
+            gameInfo.cell[i + 8].classList.add("text-info");
           } else {
             gameInfo.winnerText.classList.add("alert-danger");
+            gameInfo.cell[i].classList.add("text-danger");
+            gameInfo.cell[i + 4].classList.add("text-danger");
+            gameInfo.cell[i + 8].classList.add("text-danger");
           }
           gameInfo.winnerText.classList.remove("invisible");
         }
@@ -153,11 +177,16 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          gameInfo.board.classList.add("invisible");
           if (gameInfo.gameBoard.board[i] === "x") {
             gameInfo.winnerText.classList.add("alert-info");
+            gameInfo.cell[i].classList.add("text-info");
+            gameInfo.cell[i + 2].classList.add("text-info");
+            gameInfo.cell[i + 4].classList.add("text-info");
           } else {
             gameInfo.winnerText.classList.add("alert-danger");
+            gameInfo.cell[i].classList.add("text-danger");
+            gameInfo.cell[i + 2].classList.add("text-danger");
+            gameInfo.cell[i + 4].classList.add("text-danger");
           }
           gameInfo.winnerText.classList.remove("invisible");
         }
@@ -186,8 +215,10 @@ const checkGameOn = () => {
 const gameIsTie = () => {
   gameInfo.winnerTextContent.textContent = "It's a tie!";
   gameInfo.winnerText.classList.add("alert-dark");
-  gameInfo.board.classList.add("invisible");
   gameInfo.winnerText.classList.remove("invisible");
+  for (let i = 0; i < 9; i++) {
+    gameInfo.cell[i].classList.add("text-dark");
+  }
 };
 
 const resetGame = () => {
@@ -198,6 +229,9 @@ const resetGame = () => {
   gameInfo.board.classList.add("invisible");
   for (let i = 0; i < 9; i++) {
     gameInfo.cell[i].textContent = "";
+    gameInfo.cell[i].classList.remove("text-info");
+    gameInfo.cell[i].classList.remove("text-danger");
+    gameInfo.cell[i].classList.remove("text-dark");
     gameInfo.gameBoard.board[i] = undefined;
   }
   gameInfo.resetBtn.classList.add("invisible");

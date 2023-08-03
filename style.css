@@ -1,10 +1,33 @@
 .cell {
   min-height: 7vh;
   font-size: 2rem;
+  color: transparent;
+  -webkit-text-stroke: 1px black;
+  font-weight: bold;
 }
+
+.fade-in-anim {
+  animation: fade-in 0.5s;
+}
+
 #reset-btn-container {
   min-height: 4vh;
 }
+
 .col-lg-4 {
   min-height: 7vw;
+  /* width: 20vw; */
+  /* font-size: 3rem; */
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
