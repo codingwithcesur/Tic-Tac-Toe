@@ -1,5 +1,4 @@
 // To do:
-// add break time for computer
 // Make an ai that can't be beaten
 // Add difficulty levels
 // Add 2 player mode
@@ -60,46 +59,88 @@ const addMarker = () => {
       const fadeOut = () => {
         gameInfo.cell[i].classList.remove("fade-in-anim");
       };
-      if (checkGameOn()) {
-        if (!checkTie()) {
-          if (gameInfo.cell[i].textContent === "") {
-            gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player1;
-            gameInfo.cell[i].classList.add("fade-in-anim");
-            setTimeout(fadeOut, 500);
-            gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player1;
-            checkWinner();
-            computerPlay();
-          }
-        } else {
-          gameIsTie();
+      if (checkGameOn() && !checkTie()) {
+        if (gameInfo.cell[i].textContent === "") {
+          gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player1;
+          gameInfo.cell[i].classList.add("fade-in-anim");
+          setTimeout(fadeOut, 500);
+          gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player1;
+          checkWinner();
+          computerPlay();
         }
+      } else if (checkTie()) {
+        gameIsTie();
       }
     });
   }
 };
 
 const computerPlay = () => {
-  if (checkGameOn()) {
-    if (!checkTie()) {
-      let randomCell = Math.floor(Math.random() * 9);
-      const fadeOut = () => {
-        gameInfo.cell[randomCell].classList.remove("fade-in-anim");
-      };
-      if (gameInfo.cell[randomCell].textContent === "") {
-        gameInfo.cell[randomCell].textContent =
-          gameInfo.gameBoard.players.player2;
-        gameInfo.cell[randomCell].classList.add("fade-in-anim");
-        setTimeout(fadeOut, 500);
-        gameInfo.gameBoard.board[randomCell] =
-          gameInfo.gameBoard.players.player2;
-      } else {
-        computerPlay();
-      }
-      checkWinner();
-    } else {
-      gameIsTie();
+  if (checkGameOn() && !checkTie()) {
+    if (currentDifficulty === "easy") {
+      computerEasy();
+    } else if (currentDifficulty === "medium") {
+      computerMedium();
     }
+  } else if (checkTie()) {
+    gameIsTie();
   }
+};
+
+const computerEasy = () => {
+  let randomCell = Math.floor(Math.random() * 9);
+  const fadeOut = () => {
+    gameInfo.cell[randomCell].classList.remove("fade-in-anim");
+  };
+
+  if (gameInfo.cell[randomCell].textContent === "") {
+    gameInfo.cell[randomCell].textContent = gameInfo.gameBoard.players.player2;
+    gameInfo.cell[randomCell].classList.add("fade-in-anim");
+    setTimeout(fadeOut, 500);
+    gameInfo.gameBoard.board[randomCell] = gameInfo.gameBoard.players.player2;
+  } else {
+    computerPlay();
+  }
+  checkWinner();
+};
+
+const computerMedium = () => {
+  let randomCell = Math.floor(Math.random() * 9);
+  const fadeOut = () => {
+    gameInfo.cell[randomCell].classList.remove("fade-in-anim");
+  };
+  if (
+    (gameInfo.cell[randomCell] === "" &&
+      gameInfo.gameBoard.board[randomCell - 1] ===
+        gameInfo.gameBoard.players.player2 &&
+      gameInfo.gameBoard.board[randomCell - 2] ===
+        gameInfo.gameBoard.players.player2) ||
+    (gameInfo.gameBoard.board[randomCell] === "" &&
+      gameInfo.gameBoard.board[randomCell + 1] ===
+        gameInfo.gameBoard.players.player2 &&
+      gameInfo.gameBoard.board[randomCell + 2] ===
+        gameInfo.gameBoard.players.player2)
+  ) {
+    gameInfo.cell[randomCell].textContent = gameInfo.gameBoard.players.player2;
+    gameInfo.cell[randomCell].classList.add("fade-in-anim");
+    setTimeout(fadeOut, 500);
+    gameInfo.gameBoard.board[randomCell] = gameInfo.gameBoard.players.player2;
+  } else if (
+    (gameInfo.cell[randomCell] === "" &&
+      gameInfo.gameBoard.board[randomCell - 1] ===
+        gameInfo.gameBoard.players.player2) ||
+    gameInfo.gameBoard.board[randomCell + 1] ===
+      gameInfo.gameBoard.players.player2
+  ) {
+  } else if (gameInfo.cell[randomCell].textContent === "") {
+    gameInfo.cell[randomCell].textContent = gameInfo.gameBoard.players.player2;
+    gameInfo.cell[randomCell].classList.add("fade-in-anim");
+    setTimeout(fadeOut, 500);
+    gameInfo.gameBoard.board[randomCell] = gameInfo.gameBoard.players.player2;
+  } else {
+    computerPlay();
+  }
+  checkWinner();
 };
 
 const checkWinner = () => {
@@ -111,7 +152,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (gameInfo.gameBoard.board[i] === "x") {
+          if (
+            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
+          ) {
             gameInfo.winnerText.classList.add("alert-info");
             gameInfo.cell[i].classList.add("text-info");
             gameInfo.cell[i + 1].classList.add("text-info");
@@ -133,7 +176,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 6]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (gameInfo.gameBoard.board[i] === "x") {
+          if (
+            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
+          ) {
             gameInfo.winnerText.classList.add("alert-info");
             gameInfo.cell[i].classList.add("text-info");
             gameInfo.cell[i + 3].classList.add("text-info");
@@ -155,7 +200,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 8]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (gameInfo.gameBoard.board[i] === "x") {
+          if (
+            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
+          ) {
             gameInfo.winnerText.classList.add("alert-info");
             gameInfo.cell[i].classList.add("text-info");
             gameInfo.cell[i + 4].classList.add("text-info");
@@ -177,7 +224,9 @@ const checkWinner = () => {
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4]
         ) {
           gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (gameInfo.gameBoard.board[i] === "x") {
+          if (
+            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
+          ) {
             gameInfo.winnerText.classList.add("alert-info");
             gameInfo.cell[i].classList.add("text-info");
             gameInfo.cell[i + 2].classList.add("text-info");
@@ -199,7 +248,7 @@ const checkTie = () => {
   for (let i = 0; i < 9; i++) {
     if (gameInfo.cell[i].textContent === "") {
       return false;
-    } else if (i === 8) {
+    } else if (i === 8 && gameInfo.winnerTextContent.textContent === "") {
       return true;
     }
   }
