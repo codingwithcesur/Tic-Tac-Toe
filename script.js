@@ -127,47 +127,76 @@ const computerEasy = () => {
 
 const computerMedium = () => {
   for (let i = 0; i < 7; i++) {
-    if (
-      (gameInfo.cell[i].textContent === "" &&
-        gameInfo.gameBoard.board[i - 1] ===
-          gameInfo.gameBoard.players.player2 &&
-        gameInfo.gameBoard.board[i - 2] ===
-          gameInfo.gameBoard.players.player2) ||
-      (gameInfo.cell[i].textContent === "" &&
-        gameInfo.gameBoard.board[i + 1] ===
-          gameInfo.gameBoard.players.player2 &&
-        gameInfo.gameBoard.board[i + 2] === gameInfo.gameBoard.players.player2)
-    ) {
-      gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
-      gameInfo.cell[i].classList.add("fade-in-anim");
-      const fadeOut = () => {
-        gameInfo.cell[i].classList.remove("fade-in-anim");
-      };
-      setTimeout(fadeOut, 500);
-      gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
-      gameInfo.gameBoard.moveMade = true;
-      break;
+    if (gameInfo.cell[i].textContent === "") {
+      if (i === 2 || i === 5 || i === 8) {
+        if (
+          gameInfo.gameBoard.board[i - 1] ===
+            gameInfo.gameBoard.players.player2 &&
+          gameInfo.gameBoard.board[i - 2] === gameInfo.gameBoard.players.player2
+        ) {
+          gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+          gameInfo.cell[i].classList.add("fade-in-anim");
+          const fadeOut = () => {
+            gameInfo.cell[i].classList.remove("fade-in-anim");
+          };
+          setTimeout(fadeOut, 500);
+          gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+          gameInfo.gameBoard.moveMade = true;
+          break;
+        }
+      } else if (i === 0 || i === 3 || i === 6) {
+        if (
+          gameInfo.gameBoard.board[i + 1] ===
+            gameInfo.gameBoard.players.player2 &&
+          gameInfo.gameBoard.board[i + 2] === gameInfo.gameBoard.players.player2
+        ) {
+          gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+          gameInfo.cell[i].classList.add("fade-in-anim");
+          const fadeOut = () => {
+            gameInfo.cell[i].classList.remove("fade-in-anim");
+          };
+          setTimeout(fadeOut, 500);
+          gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+          gameInfo.gameBoard.moveMade = true;
+          break;
+        }
+      }
     }
   }
   if (!gameInfo.gameBoard.moveMade) {
     for (let i = 0; i < 8; i++) {
-      if (
-        (gameInfo.cell[i].textContent === "" &&
-          gameInfo.gameBoard.board[i - 1] ===
-            gameInfo.gameBoard.players.player2) ||
-        (gameInfo.cell[i].textContent === "" &&
-          gameInfo.gameBoard.board[i + 1] ===
-            gameInfo.gameBoard.players.player2)
-      ) {
-        gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
-        gameInfo.cell[i].classList.add("fade-in-anim");
-        const fadeOut = () => {
-          gameInfo.cell[i].classList.remove("fade-in-anim");
-        };
-        setTimeout(fadeOut, 500);
-        gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
-        gameInfo.gameBoard.moveMade = true;
-        break;
+      if (gameInfo.cell[i].textContent === "") {
+        if (i !== 0 || i !== 3 || i !== 6) {
+          if (
+            gameInfo.gameBoard.board[i - 1] ===
+            gameInfo.gameBoard.players.player2
+          ) {
+            gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+            gameInfo.cell[i].classList.add("fade-in-anim");
+            const fadeOut = () => {
+              gameInfo.cell[i].classList.remove("fade-in-anim");
+            };
+            setTimeout(fadeOut, 500);
+            gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+            gameInfo.gameBoard.moveMade = true;
+            break;
+          }
+        } else if (i !== 2 || i !== 5 || i !== 8) {
+          if (
+            gameInfo.gameBoard.board[i + 1] ===
+            gameInfo.gameBoard.players.player2
+          ) {
+            gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+            gameInfo.cell[i].classList.add("fade-in-anim");
+            const fadeOut = () => {
+              gameInfo.cell[i].classList.remove("fade-in-anim");
+            };
+            setTimeout(fadeOut, 500);
+            gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+            gameInfo.gameBoard.moveMade = true;
+            break;
+          }
+        }
       }
     }
   }
