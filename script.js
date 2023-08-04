@@ -122,12 +122,12 @@ const computerMedium = () => {
     aiTools.computerAddMarker(aiTools.currentMoveCell);
   }
   aiTools.randomMove();
-  aiTools.currentMoveCell = 10;
+  aiTools.currentMoveCell = "";
   checkWinner();
 };
 
 const aiTools = (() => {
-  let currentMoveCell = 10;
+  let currentMoveCell = "";
 
   const computerAddMarker = (i) => {
     gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
@@ -140,12 +140,12 @@ const aiTools = (() => {
   };
 
   const randomMove = () => {
-    if (aiTools.currentMoveCell === 10) {
+    if (aiTools.currentMoveCell === "") {
       let randomCell = Math.floor(Math.random() * 9);
       const fadeOut = () => {
         gameInfo.cell[randomCell].classList.remove("fade-in-anim");
       };
-      while (aiTools.currentMoveCell === 10) {
+      while (aiTools.currentMoveCell === "") {
         if (gameInfo.cell[randomCell].textContent === "") {
           gameInfo.cell[randomCell].textContent =
             gameInfo.gameBoard.players.player2;
@@ -163,7 +163,7 @@ const aiTools = (() => {
   };
 
   const checkHorizontalWin = () => {
-    if (aiTools.currentMoveCell === 10) {
+    if (aiTools.currentMoveCell === "") {
       for (let i = 0; i < 9; i++) {
         if (gameInfo.cell[i].textContent === "") {
           if (i === 2 || i === 5 || i === 8) {
@@ -195,7 +195,7 @@ const aiTools = (() => {
   };
 
   const checkHorizontalPlay = () => {
-    if (aiTools.currentMoveCell === 10) {
+    if (aiTools.currentMoveCell === "") {
       for (let i = 0; i < 9; i++) {
         if (gameInfo.cell[i].textContent === "") {
           if (i !== 0 && (i !== 3) & (i !== 6)) {
@@ -233,103 +233,78 @@ const aiTools = (() => {
 })();
 
 const checkWinner = () => {
-  for (let i = 0; i < gameInfo.gameBoard.board.length; i++) {
-    if (i === 0 || i === 3 || i === 6) {
+  let winnerCells = [];
+  const checkRows = () => {
+    for (let i = 0; i < 9; i += 3) {
       if (gameInfo.gameBoard.board[i] !== undefined) {
         if (
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 1] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2]
         ) {
-          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (
-            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
-          ) {
-            gameInfo.winnerText.classList.add("alert-info");
-            gameInfo.cell[i].classList.add("text-info");
-            gameInfo.cell[i + 1].classList.add("text-info");
-            gameInfo.cell[i + 2].classList.add("text-info");
-          } else {
-            gameInfo.winnerText.classList.add("alert-danger");
-            gameInfo.cell[i].classList.add("text-danger");
-            gameInfo.cell[i + 1].classList.add("text-danger");
-            gameInfo.cell[i + 2].classList.add("text-danger");
-          }
-          gameInfo.winnerText.classList.remove("invisible");
+          winnerCells.push(i) +
+            winnerCells.push(i + 1) +
+            winnerCells.push(i + 2);
+          return true;
         }
       }
     }
-    if (i === 0 || i === 1 || i === 2) {
+  };
+
+  const checkColumns = () => {
+    for (let i = 0; i < 3; i++) {
       if (gameInfo.gameBoard.board[i] !== undefined) {
         if (
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 3] &&
           gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 6]
         ) {
-          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (
-            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
-          ) {
-            gameInfo.winnerText.classList.add("alert-info");
-            gameInfo.cell[i].classList.add("text-info");
-            gameInfo.cell[i + 3].classList.add("text-info");
-            gameInfo.cell[i + 6].classList.add("text-info");
-          } else {
-            gameInfo.winnerText.classList.add("alert-danger");
-            gameInfo.cell[i].classList.add("text-danger");
-            gameInfo.cell[i + 3].classList.add("text-danger");
-            gameInfo.cell[i + 6].classList.add("text-danger");
-          }
-          gameInfo.winnerText.classList.remove("invisible");
+          winnerCells.push(i) +
+            winnerCells.push(i + 3) +
+            winnerCells.push(i + 6);
+          return true;
         }
       }
     }
-    if (i === 0) {
-      if (gameInfo.gameBoard.board[i] !== undefined) {
-        if (
-          gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4] &&
-          gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 8]
-        ) {
-          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (
-            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
-          ) {
-            gameInfo.winnerText.classList.add("alert-info");
-            gameInfo.cell[i].classList.add("text-info");
-            gameInfo.cell[i + 4].classList.add("text-info");
-            gameInfo.cell[i + 8].classList.add("text-info");
-          } else {
-            gameInfo.winnerText.classList.add("alert-danger");
-            gameInfo.cell[i].classList.add("text-danger");
-            gameInfo.cell[i + 4].classList.add("text-danger");
-            gameInfo.cell[i + 8].classList.add("text-danger");
-          }
-          gameInfo.winnerText.classList.remove("invisible");
-        }
+  };
+
+  const checkDiagonals = () => {
+    if (gameInfo.gameBoard.board[0] !== undefined) {
+      if (
+        gameInfo.gameBoard.board[0] === gameInfo.gameBoard.board[4] &&
+        gameInfo.gameBoard.board[0] === gameInfo.gameBoard.board[8]
+      ) {
+        winnerCells.push(0) + winnerCells.push(4) + winnerCells.push(8);
+        return true;
       }
     }
-    if (i === 2) {
-      if (gameInfo.gameBoard.board[i] !== undefined) {
-        if (
-          gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 2] &&
-          gameInfo.gameBoard.board[i] === gameInfo.gameBoard.board[i + 4]
-        ) {
-          gameInfo.winnerTextContent.textContent = `${gameInfo.gameBoard.board[i]} is the winner!`;
-          if (
-            gameInfo.gameBoard.board[i] === gameInfo.gameBoard.players.player1
-          ) {
-            gameInfo.winnerText.classList.add("alert-info");
-            gameInfo.cell[i].classList.add("text-info");
-            gameInfo.cell[i + 2].classList.add("text-info");
-            gameInfo.cell[i + 4].classList.add("text-info");
-          } else {
-            gameInfo.winnerText.classList.add("alert-danger");
-            gameInfo.cell[i].classList.add("text-danger");
-            gameInfo.cell[i + 2].classList.add("text-danger");
-            gameInfo.cell[i + 4].classList.add("text-danger");
-          }
-          gameInfo.winnerText.classList.remove("invisible");
-        }
+    if (gameInfo.gameBoard.board[2] !== undefined) {
+      if (
+        gameInfo.gameBoard.board[2] === gameInfo.gameBoard.board[4] &&
+        gameInfo.gameBoard.board[2] === gameInfo.gameBoard.board[6]
+      ) {
+        winnerCells.push(2) + winnerCells.push(4) + winnerCells.push(6);
+        return true;
       }
     }
+  };
+  if (checkRows() || checkColumns() || checkDiagonals()) {
+    gameInfo.winnerTextContent.textContent = `${
+      gameInfo.gameBoard.board[winnerCells[0]]
+    } is the winner!`;
+    if (
+      gameInfo.gameBoard.board[winnerCells[0]] ===
+      gameInfo.gameBoard.players.player1
+    ) {
+      gameInfo.winnerText.classList.add("alert-info");
+      for (let i = 0; i < winnerCells.length; i++) {
+        gameInfo.cell[winnerCells[i]].classList.add("text-info");
+      }
+    } else {
+      gameInfo.winnerText.classList.add("alert-danger");
+      for (let i = 0; i < winnerCells.length; i++) {
+        gameInfo.cell[winnerCells[i]].classList.add("text-danger");
+      }
+    }
+    gameInfo.winnerText.classList.remove("invisible");
   }
 };
 
