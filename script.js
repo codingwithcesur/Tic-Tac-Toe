@@ -2,24 +2,20 @@
 // Make an ai that can't be beaten
 // Add 2 player mode
 // Add score keeping
-
 const gameInfo = (() => {
   const board = document.querySelector("#game-board");
   const cell = document.querySelectorAll(".cell");
   const winnerText = document.querySelector("#winner-text");
-  const btnX = document.querySelector("#btn-x");
-  const btnO = document.querySelector("#btn-o");
   const resetBtn = document.querySelector("#reset-btn");
   const winnerTextContent = document.querySelector("#winner-text-content");
   const markerContainer = document.querySelector("#marker-container");
   const difficultyContainer = document.querySelector("#difficulty-container");
-  const easyBtn = document.querySelector("#btn-easy");
-  const mediumBtn = document.querySelector("#btn-medium");
+  const difficultyBtn = document.querySelectorAll(".diff-btn");
+  const markerBtn = document.querySelectorAll(".mark-btn");
   let gameBoard = {
     board: [],
     players: {},
     currentDifficulty: "",
-    moveMade: false,
   };
 
   return {
@@ -27,54 +23,62 @@ const gameInfo = (() => {
     board,
     cell,
     winnerText,
-    btnX,
-    btnO,
     resetBtn,
     winnerTextContent,
     markerContainer,
     difficultyContainer,
-    easyBtn,
-    mediumBtn,
+    difficultyBtn,
+    markerBtn,
   };
 })();
 
-const difficultyPicker = (() => {
-  gameInfo.easyBtn.addEventListener("click", () => {
-    gameInfo.gameBoard.currentDifficulty = "easy";
-    gameInfo.markerContainer.classList.remove("invisible");
-    gameInfo.difficultyContainer.classList.add("invisible");
-  });
-  gameInfo.mediumBtn.addEventListener("click", () => {
-    gameInfo.gameBoard.currentDifficulty = "medium";
-    gameInfo.markerContainer.classList.remove("invisible");
-    gameInfo.difficultyContainer.classList.add("invisible");
-  });
+const setDifficulty = (diff) => {
+  gameInfo.gameBoard.currentDifficulty = diff;
+  gameInfo.markerContainer.classList.remove("invisible");
+  gameInfo.difficultyContainer.classList.add("invisible");
+};
+const difficultyBtnEvents = (() => {
+  for (let i = 0; i < gameInfo.difficultyBtn.length; i++) {
+    gameInfo.difficultyBtn[i].addEventListener("click", () => {
+      setDifficulty(gameInfo.difficultyBtn[i].textContent.trim());
+    });
+  }
 })();
 
-const btnEvents = (() => {
-  gameInfo.btnX.addEventListener("click", () => {
-    gameInfo.gameBoard.players.player1 = "x";
-    gameInfo.gameBoard.players.player2 = "o";
-    startGame();
-  });
-  gameInfo.btnO.addEventListener("click", () => {
-    gameInfo.gameBoard.players.player1 = "o";
-    gameInfo.gameBoard.players.player2 = "x";
-    startGame();
-  });
+const setMarker = (marker) => {
+  gameInfo.gameBoard.players.player1 = marker;
+  if (marker === "X") {
+    gameInfo.gameBoard.players.player2 = "O";
+  } else {
+    gameInfo.gameBoard.players.player2 = "X";
+  }
+};
+const markerBtnEvents = (() => {
+  for (let i = 0; i < 2; i++) {
+    gameInfo.markerBtn[i].addEventListener("click", () => {
+      setMarker(gameInfo.markerBtn[i].textContent.trim());
+      startGame(
+        gameInfo.gameBoard.players.player1,
+        gameInfo.gameBoard.players.player2
+      );
+    });
+  }
+})();
+
+const resetBtnEvent = (() => {
   gameInfo.resetBtn.addEventListener("click", () => {
     resetGame();
   });
 })();
 
-const startGame = () => {
+const startGame = (marker, aiMarker) => {
   gameInfo.board.classList.remove("invisible");
   gameInfo.markerContainer.classList.add("invisible");
   gameInfo.resetBtn.classList.remove("invisible");
-  addMarker();
+  addMarker(marker, aiMarker);
 };
 
-const addMarker = () => {
+const addMarker = (marker, aiMarker) => {
   for (let i = 0; i < 9; i++) {
     gameInfo.cell[i].addEventListener("click", () => {
       const fadeOut = () => {
@@ -82,12 +86,12 @@ const addMarker = () => {
       };
       if (checkGameOn() && !checkTie()) {
         if (gameInfo.cell[i].textContent === "") {
-          gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player1;
+          gameInfo.cell[i].textContent = marker;
           gameInfo.cell[i].classList.add("fade-in-anim");
           setTimeout(fadeOut, 500);
-          gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player1;
+          gameInfo.gameBoard.board[i] = marker;
           checkWinner();
-          computerPlay();
+          computerPlay(aiMarker);
         }
       } else if (checkTie()) {
         gameIsTie();
@@ -96,139 +100,128 @@ const addMarker = () => {
   }
 };
 
-const computerPlay = () => {
+const computerPlay = (marker) => {
   if (checkGameOn() && !checkTie()) {
-    if (gameInfo.gameBoard.currentDifficulty === "easy") {
-      computerEasy();
-    } else if (gameInfo.gameBoard.currentDifficulty === "medium") {
-      computerMedium();
+    if (gameInfo.gameBoard.currentDifficulty === "Easy") {
+      computerEasy(marker);
+    } else if (gameInfo.gameBoard.currentDifficulty === "Medium") {
+      computerMedium(marker);
     }
   } else if (checkTie()) {
     gameIsTie();
   }
 };
 
-const computerEasy = () => {
-  aiTools.randomMove();
-  gameInfo.gameBoard.moveMade = false;
+const computerEasy = (marker) => {
+  aiTools.computerAddMarker(aiTools.randomMove(), marker);
   checkWinner();
 };
 
-const computerMedium = () => {
-  if (aiTools.checkHorizontalWin()) {
-    aiTools.computerAddMarker(aiTools.currentMoveCell);
+const computerMedium = (marker) => {
+  console.log(aiTools.checkVertical());
+  console.log(aiTools.checkHorizontal());
+  if (aiTools.checkHorizontal() === aiTools.checkVertical()) {
+    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
+  } else if (aiTools.checkHorizontal() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
+  } else if (aiTools.checkVertical() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.checkVertical(), marker);
+  } else {
+    aiTools.computerAddMarker(aiTools.randomMove(), marker);
   }
-  if (aiTools.checkHorizontalPlay()) {
-    aiTools.computerAddMarker(aiTools.currentMoveCell);
-  }
-  aiTools.randomMove();
-  aiTools.currentMoveCell = "";
-  checkWinner();
 };
 
 const aiTools = (() => {
-  let currentMoveCell = "";
-
-  const computerAddMarker = (i) => {
-    gameInfo.cell[i].textContent = gameInfo.gameBoard.players.player2;
+  const computerAddMarker = (i, marker) => {
+    console.log(i, marker);
+    gameInfo.cell[i].textContent = marker;
     gameInfo.cell[i].classList.add("fade-in-anim");
     const fadeOut = () => {
       gameInfo.cell[i].classList.remove("fade-in-anim");
     };
     setTimeout(fadeOut, 500);
-    gameInfo.gameBoard.board[i] = gameInfo.gameBoard.players.player2;
+    gameInfo.gameBoard.board[i] = marker;
+  };
+
+  const checkEmptyCell = (i) => {
+    if (gameInfo.cell[i].textContent === "") {
+      return true;
+    }
   };
 
   const randomMove = () => {
-    if (aiTools.currentMoveCell === "") {
-      let randomCell = Math.floor(Math.random() * 9);
-      const fadeOut = () => {
-        gameInfo.cell[randomCell].classList.remove("fade-in-anim");
-      };
-      while (aiTools.currentMoveCell === "") {
-        if (gameInfo.cell[randomCell].textContent === "") {
-          gameInfo.cell[randomCell].textContent =
-            gameInfo.gameBoard.players.player2;
-          gameInfo.cell[randomCell].classList.add("fade-in-anim");
-          setTimeout(fadeOut, 500);
-          gameInfo.gameBoard.board[randomCell] =
-            gameInfo.gameBoard.players.player2;
-          aiTools.currentMoveCell = randomCell;
-          break;
-        } else {
-          randomCell = Math.floor(Math.random() * 9);
-        }
+    let randomCell = Math.floor(Math.random() * 9);
+    while (true) {
+      if (gameInfo.cell[randomCell].textContent === "") {
+        return randomCell;
+        break;
+      } else {
+        randomCell = Math.floor(Math.random() * 9);
       }
     }
   };
 
-  const checkHorizontalWin = () => {
-    if (aiTools.currentMoveCell === "") {
-      for (let i = 0; i < 9; i++) {
-        if (gameInfo.cell[i].textContent === "") {
-          if (i === 2 || i === 5 || i === 8) {
+  const checkHorizontal = () => {
+    for (let i = 0; i < 9; i++) {
+      if (checkEmptyCell(i)) {
+        if (i === 2 || i === 5 || i === 8) {
+          if (!checkEmptyCell(i - 1)) {
             if (
               gameInfo.gameBoard.board[i - 1] ===
-                gameInfo.gameBoard.players.player2 &&
-              gameInfo.gameBoard.board[i - 2] ===
-                gameInfo.gameBoard.players.player2
+              gameInfo.gameBoard.board[i - 2]
             ) {
-              aiTools.currentMoveCell = i;
-              return true;
-              break;
+              return i;
             }
-          } else if (i === 0 || i === 3 || i === 6) {
+          }
+        }
+        if (i === 0 || i === 3 || i === 6) {
+          if (!checkEmptyCell(i + 1)) {
             if (
               gameInfo.gameBoard.board[i + 1] ===
-                gameInfo.gameBoard.players.player2 &&
-              gameInfo.gameBoard.board[i + 2] ===
-                gameInfo.gameBoard.players.player2
+              gameInfo.gameBoard.board[i + 2]
             ) {
-              aiTools.currentMoveCell = i;
-              return true;
-              break;
+              return i;
             }
           }
         }
       }
     }
+    return "noneHorizontal";
   };
 
-  const checkHorizontalPlay = () => {
-    if (aiTools.currentMoveCell === "") {
-      for (let i = 0; i < 9; i++) {
-        if (gameInfo.cell[i].textContent === "") {
-          if (i !== 0 && (i !== 3) & (i !== 6)) {
+  const checkVertical = () => {
+    for (let i = 0; i < 9; i++) {
+      if (checkEmptyCell(i)) {
+        if (i === 6 || i === 7 || i === 8) {
+          if (!checkEmptyCell(i - 3)) {
             if (
-              gameInfo.gameBoard.board[i - 1] ===
-              gameInfo.gameBoard.players.player2
+              gameInfo.gameBoard.board[i - 3] ===
+              gameInfo.gameBoard.board[i - 6]
             ) {
-              aiTools.currentMoveCell = i;
-              return true;
-              break;
+              return i;
             }
           }
-          if (i !== 2 && i !== 5 && i !== 8) {
+        }
+        if (i === 0 || i === 1 || i === 2) {
+          if (!checkEmptyCell(i + 3)) {
             if (
-              gameInfo.gameBoard.board[i + 1] ===
-              gameInfo.gameBoard.players.player2
+              gameInfo.gameBoard.board[i + 3] ===
+              gameInfo.gameBoard.board[i + 6]
             ) {
-              aiTools.currentMoveCell = i;
-              return true;
-              break;
+              return i;
             }
           }
         }
       }
     }
+    return "noneVertical";
   };
 
   return {
-    currentMoveCell,
     computerAddMarker,
     randomMove,
-    checkHorizontalWin,
-    checkHorizontalPlay,
+    checkHorizontal,
+    checkVertical,
   };
 })();
 
@@ -286,6 +279,7 @@ const checkWinner = () => {
       }
     }
   };
+
   if (checkRows() || checkColumns() || checkDiagonals()) {
     gameInfo.winnerTextContent.textContent = `${
       gameInfo.gameBoard.board[winnerCells[0]]
