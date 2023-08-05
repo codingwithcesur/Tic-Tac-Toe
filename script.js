@@ -106,6 +106,8 @@ const computerPlay = (marker) => {
       computerEasy(marker);
     } else if (gameInfo.gameBoard.currentDifficulty === "Medium") {
       computerMedium(marker);
+    } else if (gameInfo.gameBoard.currentDifficulty === "Hard") {
+      computerHard(marker);
     }
   } else if (checkTie()) {
     gameIsTie();
@@ -118,8 +120,6 @@ const computerEasy = (marker) => {
 };
 
 const computerMedium = (marker) => {
-  console.log(aiTools.checkVertical());
-  console.log(aiTools.checkHorizontal());
   if (aiTools.checkHorizontal() === aiTools.checkVertical()) {
     aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
   } else if (aiTools.checkHorizontal() !== "noneHorizontal") {
@@ -131,9 +131,26 @@ const computerMedium = (marker) => {
   }
 };
 
+const computerHard = (marker) => {
+  if (
+    aiTools.checkHorizontal() === aiTools.checkVertical() ||
+    aiTools.checkHorizontal() === aiTools.checkDiagonal()
+  ) {
+    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
+  } else if (aiTools.checkVertical() === aiTools.checkDiagonal()) {
+    aiTools.computerAddMarker(aiTools.checkVertical(), marker);
+  } else if (aiTools.checkHorizontal() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
+  } else if (aiTools.checkVertical() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.checkVertical(), marker);
+  } else if (aiTools.checkDiagonal() !== "noneDiagonal") {
+    aiTools.computerAddMarker(aiTools.checkDiagonal(), marker);
+  } else {
+    aiTools.computerAddMarker(aiTools.randomMove(), marker);
+  }
+};
 const aiTools = (() => {
   const computerAddMarker = (i, marker) => {
-    console.log(i, marker);
     gameInfo.cell[i].textContent = marker;
     gameInfo.cell[i].classList.add("fade-in-anim");
     const fadeOut = () => {
@@ -184,6 +201,16 @@ const aiTools = (() => {
             }
           }
         }
+        if (i === 1 || i === 4 || i === 7) {
+          if (!checkEmptyCell(i - 1)) {
+            if (
+              gameInfo.gameBoard.board[i - 1] ===
+              gameInfo.gameBoard.board[i + 1]
+            ) {
+              return i;
+            }
+          }
+        }
       }
     }
     return "noneHorizontal";
@@ -212,9 +239,84 @@ const aiTools = (() => {
             }
           }
         }
+        if (i === 3 || i === 4 || i === 5) {
+          if (!checkEmptyCell(i - 3)) {
+            if (
+              gameInfo.gameBoard.board[i - 3] ===
+              gameInfo.gameBoard.board[i + 3]
+            ) {
+              return i;
+            }
+          }
+        }
       }
     }
     return "noneVertical";
+  };
+
+  const checkDiagonal = () => {
+    for (let i = 0; i < 9; i++) {
+      if (checkEmptyCell(i)) {
+        if (i === 0 && !checkEmptyCell(i + 4) && !checkEmptyCell(i + 8)) {
+          if (
+            gameInfo.gameBoard.board[i + 4] === gameInfo.gameBoard.board[i + 8]
+          ) {
+            return i;
+          }
+        } else if (
+          i === 2 &&
+          !checkEmptyCell(i + 2) &&
+          !checkEmptyCell(i + 4)
+        ) {
+          if (
+            gameInfo.gameBoard.board[i + 2] === gameInfo.gameBoard.board[i + 4]
+          ) {
+            return i;
+          }
+        } else if (
+          i === 4 &&
+          !checkEmptyCell(i + 2) &&
+          !checkEmptyCell(i - 2)
+        ) {
+          if (
+            gameInfo.gameBoard.board[i - 2] === gameInfo.gameBoard.board[i + 2]
+          ) {
+            return i;
+          }
+        } else if (
+          i === 4 &&
+          !checkEmptyCell(i + 4) &&
+          !checkEmptyCell(i - 4)
+        ) {
+          if (
+            gameInfo.gameBoard.board[i + 4] === gameInfo.gameBoard.board[i - 4]
+          ) {
+            return i;
+          }
+        } else if (
+          i === 6 &&
+          !checkEmptyCell(i - 2) &&
+          !checkEmptyCell(i - 4)
+        ) {
+          if (
+            gameInfo.gameBoard.board[i - 2] === gameInfo.gameBoard.board[i - 4]
+          ) {
+            return i;
+          }
+        } else if (
+          i === 8 &&
+          !checkEmptyCell(i - 4) &&
+          !checkEmptyCell(i - 8)
+        ) {
+          if (
+            gameInfo.gameBoard.board[i - 4] === gameInfo.gameBoard.board[i - 8]
+          ) {
+            return i;
+          }
+        }
+      }
+    }
+    return "noneDiagonal";
   };
 
   return {
@@ -222,6 +324,7 @@ const aiTools = (() => {
     randomMove,
     checkHorizontal,
     checkVertical,
+    checkDiagonal,
   };
 })();
 
