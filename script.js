@@ -120,31 +120,41 @@ const computerEasy = (marker) => {
 };
 
 const computerMedium = (marker) => {
-  if (aiTools.checkHorizontal() === aiTools.checkVertical()) {
-    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
-  } else if (aiTools.checkHorizontal() !== "noneHorizontal") {
-    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
-  } else if (aiTools.checkVertical() !== "noneVertical") {
-    aiTools.computerAddMarker(aiTools.checkVertical(), marker);
+  if (aiTools.horizontalWin() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.horizontalWin(), marker);
+  } else if (aiTools.verticalWin() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.verticalWin(), marker);
+  } else if (aiTools.horizontalBlock() === aiTools.verticalBlock()) {
+    aiTools.computerAddMarker(aiTools.horizontalBlock(), marker);
+  } else if (aiTools.horizontalBlock() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.horizontalBlock(), marker);
+  } else if (aiTools.verticalBlock() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.verticalBlock(), marker);
   } else {
     aiTools.computerAddMarker(aiTools.randomMove(), marker);
   }
 };
 
 const computerHard = (marker) => {
-  if (
-    aiTools.checkHorizontal() === aiTools.checkVertical() ||
-    aiTools.checkHorizontal() === aiTools.checkDiagonal()
+  if (aiTools.horizontalWin() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.horizontalWin(), marker);
+  } else if (aiTools.verticalWin() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.verticalWin(), marker);
+  } else if (aiTools.diagonalWin() !== "noneDiagonal") {
+    aiTools.computerAddMarker(aiTools.diagonalWin(), marker);
+  } else if (
+    aiTools.horizontalBlock() === aiTools.verticalBlock() ||
+    aiTools.horizontalBlock() === aiTools.diagonalBlock()
   ) {
-    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
-  } else if (aiTools.checkVertical() === aiTools.checkDiagonal()) {
-    aiTools.computerAddMarker(aiTools.checkVertical(), marker);
-  } else if (aiTools.checkHorizontal() !== "noneHorizontal") {
-    aiTools.computerAddMarker(aiTools.checkHorizontal(), marker);
-  } else if (aiTools.checkVertical() !== "noneVertical") {
-    aiTools.computerAddMarker(aiTools.checkVertical(), marker);
-  } else if (aiTools.checkDiagonal() !== "noneDiagonal") {
-    aiTools.computerAddMarker(aiTools.checkDiagonal(), marker);
+    aiTools.computerAddMarker(aiTools.horizontalBlock(), marker);
+  } else if (aiTools.verticalBlock() === aiTools.diagonalBlock()) {
+    aiTools.computerAddMarker(aiTools.verticalBlock(), marker);
+  } else if (aiTools.horizontalBlock() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.horizontalBlock(), marker);
+  } else if (aiTools.verticalBlock() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.verticalBlock(), marker);
+  } else if (aiTools.diagonalBlock() !== "noneDiagonal") {
+    aiTools.computerAddMarker(aiTools.diagonalBlock(), marker);
   } else {
     aiTools.computerAddMarker(aiTools.randomMove(), marker);
   }
@@ -178,14 +188,18 @@ const aiTools = (() => {
     }
   };
 
-  const checkHorizontal = () => {
+  const horizontalWin = () => {
+    horizontalBlock(gameInfo.gameBoard.players.player2);
+  };
+  const horizontalBlock = (setMarker = 1) => {
     for (let i = 0; i < 9; i++) {
       if (checkEmptyCell(i)) {
         if (i === 2 || i === 5 || i === 8) {
           if (!checkEmptyCell(i - 1)) {
             if (
               gameInfo.gameBoard.board[i - 1] ===
-              gameInfo.gameBoard.board[i - 2]
+                gameInfo.gameBoard.board[i - 2] &&
+              setMarker
             ) {
               return i;
             }
@@ -195,7 +209,8 @@ const aiTools = (() => {
           if (!checkEmptyCell(i + 1)) {
             if (
               gameInfo.gameBoard.board[i + 1] ===
-              gameInfo.gameBoard.board[i + 2]
+                gameInfo.gameBoard.board[i + 2] &&
+              setMarker
             ) {
               return i;
             }
@@ -205,7 +220,8 @@ const aiTools = (() => {
           if (!checkEmptyCell(i - 1)) {
             if (
               gameInfo.gameBoard.board[i - 1] ===
-              gameInfo.gameBoard.board[i + 1]
+                gameInfo.gameBoard.board[i + 1] &&
+              setMarker
             ) {
               return i;
             }
@@ -216,14 +232,19 @@ const aiTools = (() => {
     return "noneHorizontal";
   };
 
-  const checkVertical = () => {
+  const verticalWin = () => {
+    verticalBlock(gameInfo.gameBoard.players.player2);
+  };
+
+  const verticalBlock = (setMarker = 1) => {
     for (let i = 0; i < 9; i++) {
       if (checkEmptyCell(i)) {
         if (i === 6 || i === 7 || i === 8) {
           if (!checkEmptyCell(i - 3)) {
             if (
               gameInfo.gameBoard.board[i - 3] ===
-              gameInfo.gameBoard.board[i - 6]
+                gameInfo.gameBoard.board[i - 6] &&
+              setMarker
             ) {
               return i;
             }
@@ -233,7 +254,8 @@ const aiTools = (() => {
           if (!checkEmptyCell(i + 3)) {
             if (
               gameInfo.gameBoard.board[i + 3] ===
-              gameInfo.gameBoard.board[i + 6]
+                gameInfo.gameBoard.board[i + 6] &&
+              setMarker
             ) {
               return i;
             }
@@ -243,7 +265,8 @@ const aiTools = (() => {
           if (!checkEmptyCell(i - 3)) {
             if (
               gameInfo.gameBoard.board[i - 3] ===
-              gameInfo.gameBoard.board[i + 3]
+                gameInfo.gameBoard.board[i + 3] &&
+              setMarker
             ) {
               return i;
             }
@@ -254,12 +277,17 @@ const aiTools = (() => {
     return "noneVertical";
   };
 
-  const checkDiagonal = () => {
+  const diagonalWin = () => {
+    diagonalBlock(gameInfo.gameBoard.players.player2);
+  };
+  const diagonalBlock = (setMarker = 1) => {
     for (let i = 0; i < 9; i++) {
       if (checkEmptyCell(i)) {
         if (i === 0 && !checkEmptyCell(i + 4) && !checkEmptyCell(i + 8)) {
           if (
-            gameInfo.gameBoard.board[i + 4] === gameInfo.gameBoard.board[i + 8]
+            gameInfo.gameBoard.board[i + 4] ===
+              gameInfo.gameBoard.board[i + 8] &&
+            setMarker
           ) {
             return i;
           }
@@ -269,7 +297,9 @@ const aiTools = (() => {
           !checkEmptyCell(i + 4)
         ) {
           if (
-            gameInfo.gameBoard.board[i + 2] === gameInfo.gameBoard.board[i + 4]
+            gameInfo.gameBoard.board[i + 2] ===
+              gameInfo.gameBoard.board[i + 4] &&
+            setMarker
           ) {
             return i;
           }
@@ -279,7 +309,9 @@ const aiTools = (() => {
           !checkEmptyCell(i - 2)
         ) {
           if (
-            gameInfo.gameBoard.board[i - 2] === gameInfo.gameBoard.board[i + 2]
+            gameInfo.gameBoard.board[i - 2] ===
+              gameInfo.gameBoard.board[i + 2] &&
+            setMarker
           ) {
             return i;
           }
@@ -289,7 +321,9 @@ const aiTools = (() => {
           !checkEmptyCell(i - 4)
         ) {
           if (
-            gameInfo.gameBoard.board[i + 4] === gameInfo.gameBoard.board[i - 4]
+            gameInfo.gameBoard.board[i + 4] ===
+              gameInfo.gameBoard.board[i - 4] &&
+            setMarker
           ) {
             return i;
           }
@@ -299,7 +333,9 @@ const aiTools = (() => {
           !checkEmptyCell(i - 4)
         ) {
           if (
-            gameInfo.gameBoard.board[i - 2] === gameInfo.gameBoard.board[i - 4]
+            gameInfo.gameBoard.board[i - 2] ===
+              gameInfo.gameBoard.board[i - 4] &&
+            setMarker
           ) {
             return i;
           }
@@ -309,7 +345,9 @@ const aiTools = (() => {
           !checkEmptyCell(i - 8)
         ) {
           if (
-            gameInfo.gameBoard.board[i - 4] === gameInfo.gameBoard.board[i - 8]
+            gameInfo.gameBoard.board[i - 4] ===
+              gameInfo.gameBoard.board[i - 8] &&
+            setMarker
           ) {
             return i;
           }
@@ -322,9 +360,12 @@ const aiTools = (() => {
   return {
     computerAddMarker,
     randomMove,
-    checkHorizontal,
-    checkVertical,
-    checkDiagonal,
+    horizontalWin,
+    horizontalBlock,
+    verticalWin,
+    verticalBlock,
+    diagonalWin,
+    diagonalBlock,
   };
 })();
 
@@ -362,7 +403,7 @@ const checkWinner = () => {
     }
   };
 
-  const checkDiagonals = () => {
+  const diagonalBlocks = () => {
     if (gameInfo.gameBoard.board[0] !== undefined) {
       if (
         gameInfo.gameBoard.board[0] === gameInfo.gameBoard.board[4] &&
@@ -383,7 +424,7 @@ const checkWinner = () => {
     }
   };
 
-  if (checkRows() || checkColumns() || checkDiagonals()) {
+  if (checkRows() || checkColumns() || diagonalBlocks()) {
     gameInfo.winnerTextContent.textContent = `${
       gameInfo.gameBoard.board[winnerCells[0]]
     } is the winner!`;
