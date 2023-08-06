@@ -208,6 +208,7 @@ const aiTools = (() => {
   };
 
   const randomMove = () => {
+    console.log("randomMove");
     let randomCell = Math.floor(Math.random() * 9);
     while (true) {
       if (gameInfo.cell[randomCell].textContent === "") {
@@ -395,32 +396,32 @@ const aiTools = (() => {
           if (i === 4) {
             for (let i = 0; i < 8; i++) {
               if (checkEmptyCell(i)) {
-                if (i === 5 || i === 3 || i === 2 || i === 7) {
+                if (i === 6 || i === 8 || i === 0 || i === 2) {
                   return i;
                 }
               }
             }
-          } else if (i === 5) {
+          } else if (i === 6) {
             if (checkEmptyCell(i)) {
-              if (i === 2 && i === 8) {
+              if (i === 0 && i === 3) {
                 return i;
               }
             }
-          } else if (i === 3) {
+          } else if (i === 8) {
             if (checkEmptyCell(i)) {
-              if (i === 0 && i === 6) {
+              if (i === 2 && i === 5) {
+                return i;
+              }
+            }
+          } else if (i === 0) {
+            if (checkEmptyCell(i)) {
+              if (i === 3 && i === 6) {
                 return i;
               }
             }
           } else if (i === 2) {
             if (checkEmptyCell(i)) {
-              if (i === 1 && i === 5) {
-                return i;
-              }
-            }
-          } else if (i === 7) {
-            if (checkEmptyCell(i)) {
-              if (i === 6 && i === 8) {
+              if (i === 5 && i === 8) {
                 return i;
               }
             }
