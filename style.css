@@ -6,12 +6,12 @@
   font-weight: bold;
 }
 
-.fade-in-anim {
-  animation: fade-in 0.5s;
-}
-
 #reset-btn-container {
   min-height: 4vh;
+}
+
+.fade-in-anim {
+  animation: fade-in 0.5s;
 }
 
 .col-lg-4 {

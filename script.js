@@ -1,5 +1,4 @@
 // To do:
-// Make an ai that can't be beaten
 // Add 2 player mode
 // Add score keeping
 const gameInfo = (() => {
