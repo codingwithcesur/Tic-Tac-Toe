@@ -108,6 +108,8 @@ const computerPlay = (marker) => {
       computerMedium(marker);
     } else if (gameInfo.gameBoard.currentDifficulty === "Hard") {
       computerHard(marker);
+    } else if (gameInfo.gameBoard.currentDifficulty === "Impossible") {
+      computerImpossible(marker);
     }
   } else if (checkTie()) {
     gameIsTie();
@@ -133,6 +135,7 @@ const computerMedium = (marker) => {
   } else {
     aiTools.computerAddMarker(aiTools.randomMove(), marker);
   }
+  checkWinner();
 };
 
 const computerHard = (marker) => {
@@ -158,7 +161,36 @@ const computerHard = (marker) => {
   } else {
     aiTools.computerAddMarker(aiTools.randomMove(), marker);
   }
+  checkWinner();
 };
+const computerImpossible = (marker) => {
+  if (aiTools.horizontalWin() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.horizontalWin(), marker);
+  } else if (aiTools.verticalWin() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.verticalWin(), marker);
+  } else if (aiTools.diagonalWin() !== "noneDiagonal") {
+    aiTools.computerAddMarker(aiTools.diagonalWin(), marker);
+  } else if (
+    aiTools.horizontalBlock() === aiTools.verticalBlock() ||
+    aiTools.horizontalBlock() === aiTools.diagonalBlock()
+  ) {
+    aiTools.computerAddMarker(aiTools.horizontalBlock(), marker);
+  } else if (aiTools.verticalBlock() === aiTools.diagonalBlock()) {
+    aiTools.computerAddMarker(aiTools.verticalBlock(), marker);
+  } else if (aiTools.horizontalBlock() !== "noneHorizontal") {
+    aiTools.computerAddMarker(aiTools.horizontalBlock(), marker);
+  } else if (aiTools.verticalBlock() !== "noneVertical") {
+    aiTools.computerAddMarker(aiTools.verticalBlock(), marker);
+  } else if (aiTools.diagonalBlock() !== "noneDiagonal") {
+    aiTools.computerAddMarker(aiTools.diagonalBlock(), marker);
+  } else if (aiTools.prepMove() !== "nonePrep") {
+    aiTools.computerAddMarker(aiTools.prepMove(), marker);
+  } else {
+    aiTools.computerAddMarker(aiTools.randomMove(), marker);
+  }
+  checkWinner();
+};
+
 const aiTools = (() => {
   const computerAddMarker = (i, marker) => {
     gameInfo.cell[i].textContent = marker;
@@ -189,7 +221,7 @@ const aiTools = (() => {
   };
 
   const horizontalWin = () => {
-    horizontalBlock(gameInfo.gameBoard.players.player2);
+    return horizontalBlock(gameInfo.gameBoard.players.player2);
   };
   const horizontalBlock = (setMarker = 1) => {
     for (let i = 0; i < 9; i++) {
@@ -233,7 +265,7 @@ const aiTools = (() => {
   };
 
   const verticalWin = () => {
-    verticalBlock(gameInfo.gameBoard.players.player2);
+    return verticalBlock(gameInfo.gameBoard.players.player2);
   };
 
   const verticalBlock = (setMarker = 1) => {
@@ -278,7 +310,7 @@ const aiTools = (() => {
   };
 
   const diagonalWin = () => {
-    diagonalBlock(gameInfo.gameBoard.players.player2);
+    return diagonalBlock(gameInfo.gameBoard.players.player2);
   };
   const diagonalBlock = (setMarker = 1) => {
     for (let i = 0; i < 9; i++) {
@@ -357,6 +389,51 @@ const aiTools = (() => {
     return "noneDiagonal";
   };
 
+  const prepMove = () => {
+    for (let i = 0; i < 9; i++) {
+      if (!checkEmptyCell(i)) {
+        if (i === 4 || i === 5 || i === 3 || i === 2 || i === 7) {
+          if (i === 4) {
+            for (let i = 0; i < 8; i++) {
+              if (checkEmptyCell(i)) {
+                if (i === 5 || i === 3 || i === 2 || i === 7) {
+                  return i;
+                }
+              }
+            }
+          } else if (i === 5) {
+            if (checkEmptyCell(i)) {
+              if (i === 2 && i === 8) {
+                return i;
+              }
+            }
+          } else if (i === 3) {
+            if (checkEmptyCell(i)) {
+              if (i === 0 && i === 6) {
+                return i;
+              }
+            }
+          } else if (i === 2) {
+            if (checkEmptyCell(i)) {
+              if (i === 1 && i === 5) {
+                return i;
+              }
+            }
+          } else if (i === 7) {
+            if (checkEmptyCell(i)) {
+              if (i === 6 && i === 8) {
+                return i;
+              }
+            }
+          }
+        }
+      } else if (i === 4) {
+        return i;
+      }
+    }
+    return "nonePrep";
+  };
+
   return {
     computerAddMarker,
     randomMove,
@@ -366,6 +443,7 @@ const aiTools = (() => {
     verticalBlock,
     diagonalWin,
     diagonalBlock,
+    prepMove,
   };
 })();
 
